@@ -28,7 +28,7 @@ class Chef
       def run
         zone_list = [ 
           ui.color('ID', :bold),
-          ui.color('Name', :bold),
+          ui.color('Domain', :bold),
           ui.color('Comment', :bold),
           ui.color('AccountId', :bold),
           ui.color('TTL', :bold),
@@ -36,11 +36,11 @@ class Chef
         ]
         connection_dns.zones.sort_by(&:id).each do |zone|
           zone_list << zone.id.to_s
-          zone_list << zone.name
+          zone_list << zone.domain
           zone_list << zone.comment
-          zone_list << zone.accountId.to_s
+          zone_list << zone.account_id.to_s
           zone_list << zone.ttl
-          zone_list << zone.emailAddress
+          zone_list << zone.email
         end
         puts ui.list(zone_list, :columns_across, 6)
       end
