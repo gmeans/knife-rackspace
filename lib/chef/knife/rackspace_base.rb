@@ -66,6 +66,17 @@ class Chef
         end
       end
 
+      def connection_dns
+        @connection ||= begin
+          connection = Fog::DNS.new(
+            :provider => 'Rackspace',
+            :rackspace_api_key => Chef::Config[:knife][:rackspace_api_key],
+            :rackspace_username => (Chef::Config[:knife][:rackspace_username] || Chef::Config[:knife][:rackspace_api_username]),
+            :rackspace_auth_url => Chef::Config[:knife][:rackspace_api_auth_url] || config[:rackspace_api_auth_url]
+          )
+        end
+      end
+
       def locate_config_value(key)
         key = key.to_sym
         Chef::Config[:knife][key] || config[key]
