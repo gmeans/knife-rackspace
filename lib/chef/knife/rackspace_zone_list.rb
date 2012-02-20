@@ -34,7 +34,7 @@ class Chef
           ui.color('TTL', :bold),
           ui.color('EmailAddress', :bold)
         ]
-        connection.zones.sort_by(&:id).each do |zone|
+        connection_dns.zones.sort_by(&:id).each do |zone|
           zone_list << zone.id.to_s
           zone_list << zone.name
           zone_list << zone.comment
