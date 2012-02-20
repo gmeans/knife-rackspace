@@ -23,38 +23,36 @@ class Chef
 
       include Knife::RackspaceBase
 
-      banner "knife rackspace record list (options)"
-
-      option :zone,
-        :short => "-z ZONE",
-        :long => "--zone ZONE",
-        :description => "The zone you wish to list records for",
+      banner "knife rackspace record list DOMAIN [domain]"
 
       def run
-        connection_dns.zones.sort_by(&:id).each do |zone|
-          if config[:zone] == zone.domain.to_s
-            record_list = [ 
-              ui.color('ID', :bold),
-              ui.color('Name', :bold),
-              ui.color('Value', :bold),
-              ui.color('TTL', :bold),
-              ui.color('Type', :bold),
-              ui.color('Priority', :bold)
-            ]
+        
+        all_zones = connection_dns.zones.sort_by(&:id)
 
-            zone.records.sort_by(&:id).each do |record|
-              record_list << record.id.to_s
-              record_list << record.name.to_s
-              record_list << record.value.to_s
-              record_list << record.ttl.to_s
-              record_list << record.type.to_s
-              record_list << record.priority
+        @name_args.each do |domain|
+          all_zones.each do |zone|
+            if zone.domain == domain
+              record_list = [ 
+                ui.color('ID', :bold),
+                ui.color('Name', :bold),
+                ui.color('Value', :bold),
+                ui.color('TTL', :bold),
+                ui.color('Type', :bold),
+                ui.color('Priority', :bold)
+              ]
+
+              zone.records.sort_by(&:id).each do |record|
+                record_list << record.id.to_s
+                record_list << record.name.to_s
+                record_list << record.value.to_s
+                record_list << record.ttl.to_s
+                record_list << record.type.to_s
+                record_list << record.priority.to_s
+              end
+              puts ui.list(record_list, :columuns_across, 6)
             end
-
-            puts ui.list(record_list, :columuns_across, 6)
-            return
           end
-        end  
+        end
       end
 
     end
